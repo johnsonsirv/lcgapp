@@ -1,29 +1,35 @@
 puts "Seeding participants..."
+
+@event = Event.find_by(year: 2025)
+if @event.nil?
+  puts "Event not found for year 2025"
+  exit
+end
+
+require 'csv'
 CSV.foreach('db/seeds/2025_participants.csv', headers: true) do |row|
   begin
-    puts "Seeding participant: #{row['phone_number']} - name #{row['first_name']} #{row['last_name']}"
+    puts "Seeding participant: #{row['PHONE_NUMBER']} - name #{row['FIRST_NAME']} #{row['LAST_NAME']}"
 
-    phone_number = row['phone_number']
-    first_name = row['first_name']
-    last_name = row['last_name']
+    phone_number = row['PHONE_NUMBER']
+    first_name = row['FIRST_NAME']
+    last_name = row['LAST_NAME']
 
-    participant = Participant.find_by(phone_number: phone_number)
+    participant = @event.participants.find_by(phone_number: phone_number).first
     if participant
       participant.update!(
         first_name: first_name,
         last_name: last_name,
-        email: row['email'],
-        gender: row['gender'],
-        denomination: row['denomination']
+        email: row['EMAIL'],
+        middle_name: row['MIDDLE_NAME']
       )
     else
-      Participant.create(
+      @event.participants.create(
         phone_number: phone_number,
         first_name: first_name,
         last_name: last_name,
-        email: row['email'],
-        gender: row['gender'],
-        denomination: row['denomination']
+        middle_name: row['MIDDLE_NAME'],
+        email: row['EMAIL']
       )
     end
   rescue ActiveRecord::RecordInvalid => e
