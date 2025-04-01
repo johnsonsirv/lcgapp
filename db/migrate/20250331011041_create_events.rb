@@ -13,8 +13,8 @@ class CreateEvents < ActiveRecord::Migration[8.0]
       t.string :short_url, null: true
       t.timestamps
 
-      t.index :year, uniqueness: true
-      t.index :theme, uniqueness: true
+      t.index :year, unique: true
+      t.index :theme, unique: true
       t.index :status
       t.index [ :start_date, :end_date ]   # For date range queries
     end

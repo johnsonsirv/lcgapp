@@ -5,6 +5,6 @@ class ApplicationRecord < ActiveRecord::Base
 
   private
   def set_uuid
-    self.uuid = SecureRandom.uuid
+    self.id = SecureRandom.uuid
   end
 end

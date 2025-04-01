@@ -10,37 +10,35 @@ default: &default
   timeout: 5000
 
 development:
-  <<: *default
   primary:
     <<: *default
-    database: storage/lcg_quick_check_development_db
+    database: storage/lcg_quick_check_development_db.sqlite3
   cache:
     <<: *default
-    database:  storage/lcg_quick_check_development_cache_db
+    database:  storage/lcg_quick_check_development_cache_db.sqlite3
   queue:
     <<: *default
-    database: storage/lcg_quick_check_development_queue_db
+    database: storage/lcg_quick_check_development_queue_db.sqlite3
   cable:
     <<: *default
-    database:  storage/lcg_quick_check_development_cable_db
+    database:  storage/lcg_quick_check_development_cable_db.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
   primary:
     <<: *default
-    database: storage/lcg_quick_check_test_development_db
+    database: storage/lcg_quick_check_test_db.sqlite3
   cache:
     <<: *default
-    database:  storage/lcg_quick_check_test_development_cache_db
+    database:  storage/lcg_quick_check_test_cache_db.sqlite3
   queue:
     <<: *default
-    database: storage/lcg_quick_check_test_development_queue_db
+    database: storage/lcg_quick_check_test_queue_db.sqlite3
   cable:
     <<: *default
-    database:  storage/lcg_quick_check_test_development_cable_db
+    database:  storage/lcg_quick_check_test_cable_db.sqlite3
 
 
 # Store production database in the storage/ directory, which by default
@@ -52,12 +50,9 @@ production:
   cache:
     <<: *default
     database: storage/lcg_quick_check_production_cache.sqlite3
-    migrations_paths: db/cache_migrate
   queue:
     <<: *default
     database: storage/lcg_quick_check_production_queue.sqlite3
-    migrations_paths: db/queue_migrate
   cable:
     <<: *default
     database: storage/lcg_quick_check_production_cable.sqlite3
-    migrations_paths: db/cable_migrate
