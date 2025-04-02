@@ -1,0 +1,32 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:80"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+    volumes:
+      - .:/rails
+
+  elasticsearch:
+    image: elasticsearch:8.11.1
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  elasticsearch-data:

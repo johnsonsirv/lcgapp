@@ -8,16 +8,6 @@ class HealthController < ApplicationController
   def readiness
     status = { database: check_database, status: "ready" }
 
-    if solid_queue_worker?
-      queue_health = HealthMonitors::SolidQueueMonitor.check_health
-      status.merge!(solid_queue: queue_health)
-
-      if queue_health[:status] == :error
-        Rails.logger.error("SolidQueue health check failed: #{queue_health[:details]}")
-        return render json: status, status: :service_unavailable
-      end
-    end
-
     render json: status, status: :ok
   rescue StandardError => e
     Rails.logger.error("Health check failed: #{e.message}")

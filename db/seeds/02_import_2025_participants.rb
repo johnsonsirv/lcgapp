@@ -11,7 +11,6 @@ end
 puts "purging participants..."
 @event.participants.destroy_all
 
-puts "Total participants: #{total_participants}"
 CSV.foreach('db/seeds/2025_masterlist_list.csv', headers: true) do |row|
   begin
     puts "Seeding participant: #{row['PHONE_NUMBER']} - name #{row['FIRST_NAME']} #{row['LAST_NAME']}"

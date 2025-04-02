@@ -1,5 +1,5 @@
 module ApiResponseHelper
-  extend ActiveSupport::Concerns
+  extend ActiveSupport::Concern
   def render_success(message, data = {})
   render json: {
     status: {
