@@ -27,6 +27,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  web-ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NEXT_PUBLIC_API_URL=http://web:80
 
 volumes:
   elasticsearch-data:
