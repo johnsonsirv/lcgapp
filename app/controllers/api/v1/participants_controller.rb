@@ -30,7 +30,7 @@ class Api::V1::ParticipantsController < ApplicationController
   private
 
   def set_current_event
-    @event = Event.includes(:participants).find_by(year: 2025)
+    @event = Event.includes(:participants).find_by(year: 2026)
   end
 
   def set_participant

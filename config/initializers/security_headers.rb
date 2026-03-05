@@ -7,18 +7,15 @@ DEVELOPMENT_DOMAINS = [
   "127.0.0.1:3000",
   "127.0.0.1:3001",
   "127.0.0.1:5173",
-  "127.0.0.1:8080",
-  "192.168.1.80:3001"
+  "127.0.0.1:8080"
 ].freeze
 
 # Define production domains
 PRODUCTION_DOMAINS = [
   "localhost:3000",
   "localhost:3001",
-   "192.168.1.80:3001",
   "https://lcgapp.onrender.com",
-  "https://lcgapp-api.onrender.com",
-  ENV["FRONTEND_URL"]
+  "https://lcgapp-api.onrender.com"
 ].freeze
 
 def determine_allowed_domains

@@ -6,7 +6,7 @@ class Event < ApplicationRecord
   validates :name, presence: true
   validates :theme, presence: true
   validates :year, presence: true, uniqueness: true,
-            numericality: { only_integer: true, greater_than_or_equal_to: 2025, less_than_or_equal_to: 2035 }
+            numericality: { only_integer: true, greater_than_or_equal_to: 2026, less_than_or_equal_to: 2035 }
   validates :start_date, presence: true
   validates :end_date, presence: true
 

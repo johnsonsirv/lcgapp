@@ -15,7 +15,7 @@ records_to_insert = []
 tot_skipped = 0
 tot_invalid = 0
 
-CSV.foreach('db/seeds/2025_masterlist_list.csv', headers: true) do |row|
+CSV.foreach('db/seeds/2026_masterlist_list.csv', headers: true) do |row|
   phone_number = row['PHONE_NUMBER']
 
   if phone_number.blank?
