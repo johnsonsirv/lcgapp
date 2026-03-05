@@ -1,0 +1,43 @@
+databases:
+  - name: lcgapp-db
+    databaseName: lcgapp_prod
+    user: lcgapp
+    plan: free
+    region: oregon
+
+services:
+  - type: web
+    name: lcgapp-api
+    runtime: ruby
+    region: oregon
+    plan: free
+    buildCommand: bundle install && bundle exec rails db:migrate
+    startCommand: bundle exec rails server -b 0.0.0.0 -p $PORT
+    healthCheckPath: /up
+    envVars:
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lcgapp-db
+          property: connectionString
+      - key: RAILS_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://lcgapp.onrender.com
+
+  # Next.js Frontend
+  - type: web
+    name: lcgapp
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NEXT_PUBLIC_API_URL
+        value: https://lcgapp-api.onrender.com

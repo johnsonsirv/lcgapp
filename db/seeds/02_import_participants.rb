@@ -2,9 +2,9 @@ require 'csv'
 
 puts "Seeding participants..."
 
-@event = Event.find_by(year: 2025)
+@event = Event.find_by(year: 2026)
 if @event.nil?
-  puts "Event not found for year 2025"
+  puts "Event not found for year 2026"
   exit
 end
 
