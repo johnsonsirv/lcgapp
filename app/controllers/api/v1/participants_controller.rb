@@ -19,7 +19,7 @@ class Api::V1::ParticipantsController < ApplicationController
       return render_success("Participants Details", [])
     end
 
-    @participants = @event.participants
+    @participants = Participant
       .smart_search(query)
       .select(:id, :first_name, :last_name, :email, :phone_number, :attended, :event_id)
       .limit(50)
