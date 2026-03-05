@@ -13,10 +13,12 @@ DEVELOPMENT_DOMAINS = [
 
 # Define production domains
 PRODUCTION_DOMAINS = [
-  "localhost://web:80", # docker rails server
   "localhost:3000",
   "localhost:3001",
-   "192.168.1.80:3001"
+   "192.168.1.80:3001",
+  "https://lcgapp.onrender.com",
+  "https://lcgapp-api.onrender.com",
+  ENV["FRONTEND_URL"]
 ].freeze
 
 def determine_allowed_domains

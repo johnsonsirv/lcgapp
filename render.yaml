@@ -6,15 +6,19 @@ databases:
     region: oregon
 
 services:
+  # Rails Backend API
   - type: web
     name: lcgapp-api
     runtime: ruby
     region: oregon
     plan: free
+    # Add rootDir: backend here if Rails is not in the root repo directory
     buildCommand: bundle install && bundle exec rails db:migrate
     startCommand: bundle exec rails server -b 0.0.0.0 -p $PORT
     healthCheckPath: /up
     envVars:
+      - key: RUBY_VERSION
+        value: "3.2.2" # Update this to match your local ruby version
       - key: RAILS_MASTER_KEY
         sync: false
       - key: DATABASE_URL
