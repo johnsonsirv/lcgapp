@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 interface Participant {
   id: string
@@ -16,26 +16,35 @@ export default function Search() {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Participant[]>([])
   const [isUpdating, setIsUpdating] = useState<string | null>(null)
-  const ip = "http://192.168.0.133:3000"
+  const [isLoading, setIsLoading] = useState(false)
+  const ip = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async (query: string) => {
+    if (query.trim().length < 3) {
+      setResults([])
+      return
+    }
+
+    setIsLoading(true)
     try {
-      const response = await fetch(`${ip}/api/v1/participants/search?query=${query}`)
-    //   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/participants/search?query=${query}`)
+      const response = await fetch(
+        `${ip}/api/v1/participants/search?query=${encodeURIComponent(query)}`
+      )
       const data = await response.json()
-      
-      setResults(data.data)
+      setResults(data.data || [])
     } catch (error) {
       console.error('Search error:', error)
+      setResults([])
+    } finally {
+      setIsLoading(false)
     }
-  }
+  }, [ip])
 
   const handleToggleAttendance = async (id: string) => {
     try {
         setIsUpdating(id)
 
         const response = await fetch(`${ip}/api/v1/participants/${id}/toggle_attended`, {
-    //   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}}/api/v1/participants/${id}/toggle_attended`, {
         method: 'PATCH'
       })
       const { data } = await response.json()
@@ -53,13 +62,19 @@ export default function Search() {
     }
   }
 
+  // Live search with debounce - triggers at 3+ characters
   useEffect(() => {
-    if (query.length >= 5) {
-      const timeoutId = setTimeout(() => {
-        handleSearch()
-      }, 500) // 500ms delay
+    const timeoutId = setTimeout(() => {
+      handleSearch(query)
+    }, 250) // 250ms debounce for faster response
 
-      return () => clearTimeout(timeoutId)
+    return () => clearTimeout(timeoutId)
+  }, [query, handleSearch])
+
+  // Clear results when query is empty
+  useEffect(() => {
+    if (query.length === 0) {
+      setResults([])
     }
   }, [query])
 
@@ -75,7 +90,7 @@ return (
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleSearch()
+                  handleSearch(query)
                 }
               }}
               placeholder="Search by phone number or first name..."
@@ -86,7 +101,7 @@ return (
             />
             <div className="flex justify-center">
               <button
-                onClick={handleSearch}
+                onClick={() => handleSearch(query)}
                 className="w-1/3 px-8 py-3 bg-blue-800 text-white text-2xl rounded-lg hover:bg-blue-900 transition-colors"
               >
                 Search

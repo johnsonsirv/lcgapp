@@ -8,7 +8,7 @@ DEVELOPMENT_DOMAINS = [
   "127.0.0.1:3001",
   "127.0.0.1:5173",
   "127.0.0.1:8080",
-  "192.168.0.133:3001"
+  "192.168.1.80:3001"
 ].freeze
 
 # Define production domains
@@ -16,7 +16,7 @@ PRODUCTION_DOMAINS = [
   "localhost://web:80", # docker rails server
   "localhost:3000",
   "localhost:3001",
-   "192.168.0.133:3001"
+   "192.168.1.80:3001"
 ].freeze
 
 def determine_allowed_domains

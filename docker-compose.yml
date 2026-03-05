@@ -1,43 +1,46 @@
 version: '3'
 services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lcg_quick_check_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lcg"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   web:
     build: .
     ports:
       - "3000:80"
     depends_on:
-      elasticsearch:
+      db:
         condition: service_healthy
     environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
+      DATABASE_URL: postgres://postgres:postgres@db:5432/lcg_quick_check_development
       RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      RAILS_ENV: development
     volumes:
       - .:/rails
 
-  elasticsearch:
-    image: elasticsearch:8.11.1
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-    ports:
-      - "9200:9200"
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9200"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
   web-ui:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3001:3000"
+      - "3001:3001"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - NEXT_PUBLIC_API_URL=http://web:80
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
 
 volumes:
-  elasticsearch-data:
+  postgres-data:

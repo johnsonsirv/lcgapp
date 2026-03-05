@@ -1,58 +1,21 @@
-# SQLite. Versions 3.8.0 and up are supported.
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem "sqlite3"
-#
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
+  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
+  host: <%= ENV["POSTGRES_HOST"] %>
+  port: <%= ENV["POSTGRES_PORT"] || 5432 %>
 
 development:
-  primary:
-    <<: *default
-    database: storage/lcg_quick_check_development_db.sqlite3
-  cache:
-    <<: *default
-    database:  storage/lcg_quick_check_development_cache_db.sqlite3
-  queue:
-    <<: *default
-    database: storage/lcg_quick_check_development_queue_db.sqlite3
-  cable:
-    <<: *default
-    database:  storage/lcg_quick_check_development_cable_db.sqlite3
+  <<: *default
+  database: lcg_quick_check_development
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
-  primary:
-    <<: *default
-    database: storage/lcg_quick_check_test_db.sqlite3
-  cache:
-    <<: *default
-    database:  storage/lcg_quick_check_test_cache_db.sqlite3
-  queue:
-    <<: *default
-    database: storage/lcg_quick_check_test_queue_db.sqlite3
-  cable:
-    <<: *default
-    database:  storage/lcg_quick_check_test_cable_db.sqlite3
+  <<: *default
+  database: lcg_quick_check_test
 
 
-# Store production database in the storage/ directory, which by default
-# is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  primary:
-    <<: *default
-    database: storage/lcg_quick_check_production.sqlite3
-  cache:
-    <<: *default
-    database: storage/lcg_quick_check_production_cache.sqlite3
-  queue:
-    <<: *default
-    database: storage/lcg_quick_check_production_queue.sqlite3
-  cable:
-    <<: *default
-    database: storage/lcg_quick_check_production_cable.sqlite3
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
